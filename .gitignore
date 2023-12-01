@@ -1,0 +1,5 @@
+*.tst
+*.txt
+.cache
+bin
+build
