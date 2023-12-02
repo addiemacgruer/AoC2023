@@ -64,3 +64,5 @@ endif()
 
 add_executable(00 00.cc)
 add_executable(01 01.cc)
+add_executable(02 02.cc)
+add_executable(03 03.cc)
