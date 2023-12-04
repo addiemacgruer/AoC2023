@@ -48,7 +48,6 @@ add_compile_options(
 )
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-#	set(asan -g -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls)
 	set(asan -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-omit-frame-pointer -fno-optimize-sibling-calls)
 	add_compile_options(${asan} -O0 -fstandalone-debug)
 	add_link_options(${asan})
