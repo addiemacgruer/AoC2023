@@ -83,5 +83,5 @@ auto solve(const Parse &input) {
 } // namespace
 
 auto main() -> int {
-  solve(parse("03.txt"));
+  solve(parse("input/03.txt"));
 }

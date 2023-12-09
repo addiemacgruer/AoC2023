@@ -67,7 +67,7 @@ auto part(const std::vector<std::string> &input, F evaluator) {
 } // namespace
 
 auto main() -> int {
-  auto input = parse("01.txt");
+  auto input = parse("input/01.txt");
   std::cout << "Part1: " << part(input, is_digit) << std::endl;         // 55816
   std::cout << "Part2: " << part(input, is_digit_or_name) << std::endl; // 54980
 }

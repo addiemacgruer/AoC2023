@@ -112,7 +112,7 @@ auto part2(const Input &input) {
 } // namespace
 
 auto main() -> int {
-  auto input = parse("05.txt");
+  auto input = parse("input/05.txt");
   std::cout << "Part 1: " << part1(input) << '\n'; // 662197086
   std::cout << "Part 2: " << part2(input) << '\n'; // 52510809
 }

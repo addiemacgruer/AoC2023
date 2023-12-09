@@ -74,7 +74,7 @@ auto part2(const ScratchCards &input) {
 } // namespace
 
 auto main() -> int {
-  auto input = parse("04.txt");
+  auto input = parse("input/04.txt");
   std::cout << "Part 1: " << part1(input) << '\n'; // 27845
   std::cout << "Part 2: " << part2(input) << '\n'; // 9496801
 }

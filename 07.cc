@@ -108,7 +108,7 @@ auto rank_and_score(Hands hands, bool jokers) {
 } // namespace
 
 auto main() -> int {
-  auto input = parse("07.txt");
+  auto input = parse("input/07.txt");
   std::cout << "Part 1: " << rank_and_score(input, false) << '\n';           // 248559379
   std::cout << "Part 2: " << rank_and_score(std::move(input), true) << '\n'; // 249631254
 }

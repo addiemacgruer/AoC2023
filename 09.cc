@@ -57,5 +57,5 @@ auto solve(const Oasis &sequences) {
 } // namespace
 
 auto main() -> int {
-  solve(parse("09.txt"));
+  solve(parse("input/09.txt"));
 }

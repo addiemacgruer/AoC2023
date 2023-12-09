@@ -74,7 +74,7 @@ auto part2(const Desert &input) {
 } // namespace
 
 auto main() -> int {
-  auto input = parse("08.txt");
+  auto input = parse("input/08.txt");
   std::cout << "Part 1: " << part1(input) << '\n'; // 19099
   std::cout << "Part 2: " << part2(input) << '\n'; // 17099847107071
 }

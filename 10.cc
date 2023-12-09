@@ -37,7 +37,7 @@ auto part2(const Parse &input) {
 } // namespace
 
 auto main() -> int {
-  auto input = parse("input/00.tst");
+  auto input = parse("input/10.tst");
   std::cout << "Part 1: " << part1(input) << '\n';
   std::cout << "Part 2: " << part2(input) << '\n';
 }

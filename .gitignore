@@ -1,5 +1,4 @@
-*.tst
-*.txt
 .cache
 bin
 build
+input

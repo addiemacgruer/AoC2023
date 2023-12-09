@@ -93,7 +93,7 @@ auto part2(const std::vector<Game> &input) {
 } // namespace
 
 auto main() -> int {
-  auto input = parse("02.txt");
+  auto input = parse("input/02.txt");
   std::cout << "Part 1: " << part1(input) << std::endl; // 2632
   std::cout << "Part 2: " << part2(input) << std::endl; // 69629
 }
