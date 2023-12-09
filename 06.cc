@@ -1,6 +1,6 @@
+#include <boost/log/trivial.hpp>
 #include <cstdint>
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -42,6 +42,6 @@ auto find_distance_combos(const Parse &input) {
 } // namespace
 
 auto main() -> int {
-  std::cout << "Part 1: " << find_distance_combos(puzz) << '\n';  // 281600
-  std::cout << "Part 2: " << find_distance_combos(puzz2) << '\n'; // 33875953
+  BOOST_LOG_TRIVIAL(info) << "Part 1: " << find_distance_combos(puzz);  // 281600
+  BOOST_LOG_TRIVIAL(info) << "Part 2: " << find_distance_combos(puzz2); // 33875953
 }

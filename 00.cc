@@ -1,5 +1,5 @@
+#include <boost/log/trivial.hpp>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -37,7 +37,9 @@ auto part2(const Parse &input) {
 } // namespace
 
 auto main() -> int {
+  BOOST_LOG_TRIVIAL(debug) << "Starting up";
   auto input = parse("input/00.tst");
-  std::cout << "Part 1: " << part1(input) << '\n';
-  std::cout << "Part 2: " << part2(input) << '\n';
+  BOOST_LOG_TRIVIAL(debug) << "Input parsed";
+  BOOST_LOG_TRIVIAL(info) << "Part 1: " << part1(input);
+  BOOST_LOG_TRIVIAL(info) << "Part 2: " << part2(input);
 }

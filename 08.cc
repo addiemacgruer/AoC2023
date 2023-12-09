@@ -1,7 +1,7 @@
 #include <algorithm>
+#include <boost/log/trivial.hpp>
 #include <fstream>
 #include <functional>
-#include <iostream>
 #include <numeric>
 #include <stdexcept>
 #include <string>
@@ -65,16 +65,17 @@ auto part2(const Desert &input) {
       loops.push_back(walk(input, step.first, [](const std::string &place) {
         return place.at(2) == 'Z';
       }));
-  auto answer = size_t{1};
-  for (auto l : loops)
-    answer = std::lcm(answer, l);
-  return answer;
+  return std::reduce(loops.begin(), loops.end(), size_t{1}, [](size_t a, size_t b) {
+    return std::lcm(a, b);
+  });
 }
 
 } // namespace
 
 auto main() -> int {
+  BOOST_LOG_TRIVIAL(debug) << "Starting up";
   auto input = parse("input/08.txt");
-  std::cout << "Part 1: " << part1(input) << '\n'; // 19099
-  std::cout << "Part 2: " << part2(input) << '\n'; // 17099847107071
+  BOOST_LOG_TRIVIAL(debug) << "Input parsed";
+  BOOST_LOG_TRIVIAL(info) << "Part 1: " << part1(input); // 19099
+  BOOST_LOG_TRIVIAL(info) << "Part 2: " << part2(input); // 17099847107071
 }

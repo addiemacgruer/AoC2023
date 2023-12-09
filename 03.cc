@@ -1,6 +1,6 @@
 #include "point.h"
+#include <boost/log/trivial.hpp>
 #include <fstream>
-#include <iostream>
 #include <map>
 #include <set>
 #include <stdexcept>
@@ -76,12 +76,14 @@ auto solve(const Parse &input) {
       }
     }
   }
-  std::cout << "Part 1: " << rval1 << '\n'; // 536576
-  std::cout << "Part 2: " << rval2 << '\n'; // 75741499
+  BOOST_LOG_TRIVIAL(info) << "Part 1: " << rval1 << " Part 2: " << rval2;
 }
 
 } // namespace
 
 auto main() -> int {
-  solve(parse("input/03.txt"));
+  BOOST_LOG_TRIVIAL(debug) << "Starting up";
+  auto input = parse("input/03.txt");
+  BOOST_LOG_TRIVIAL(debug) << "Input parsed";
+  solve(input);
 }

@@ -1,6 +1,6 @@
+#include <boost/log/trivial.hpp>
 #include <fstream>
 #include <future>
-#include <iostream>
 #include <limits>
 #include <sstream>
 #include <stdexcept>
@@ -112,7 +112,9 @@ auto part2(const Input &input) {
 } // namespace
 
 auto main() -> int {
+  BOOST_LOG_TRIVIAL(debug) << "Starting up";
   auto input = parse("input/05.txt");
-  std::cout << "Part 1: " << part1(input) << '\n'; // 662197086
-  std::cout << "Part 2: " << part2(input) << '\n'; // 52510809
+  BOOST_LOG_TRIVIAL(debug) << "Input parsed";
+  BOOST_LOG_TRIVIAL(info) << "Part 1: " << part1(input); // 662197086
+  BOOST_LOG_TRIVIAL(info) << "Part 2: " << part2(input); // 52510809
 }

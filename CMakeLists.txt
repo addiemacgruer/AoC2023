@@ -16,10 +16,11 @@ if (CMAKE_GENERATOR MATCHES "Ninja")
 	set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake" CACHE INTERNAL "")
 endif()
 
-project(Game LANGUAGES CXX)
-enable_testing()
+project(Advent2023 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS ON)
+
+find_package(Boost COMPONENTS log REQUIRED)
 
 add_compile_options(
 	-fcolor-diagnostics
@@ -61,14 +62,7 @@ else()
 	add_definitions(-DNDEBUG)
 endif()
 
-add_executable(00 00.cc)
-add_executable(01 01.cc)
-add_executable(02 02.cc)
-add_executable(03 03.cc)
-add_executable(04 04.cc)
-add_executable(05 05.cc)
-add_executable(06 06.cc)
-add_executable(07 07.cc)
-add_executable(08 08.cc)
-add_executable(09 09.cc)
-add_executable(10 10.cc)
+foreach (day IN ITEMS 00 01 02 03 04 05 06 07 08 09 10)
+	add_executable(${day} ${day}.cc)
+	target_link_libraries(${day} PRIVATE Boost::log)
+endforeach()

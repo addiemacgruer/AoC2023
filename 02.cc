@@ -1,5 +1,5 @@
+#include <boost/log/trivial.hpp>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -93,7 +93,9 @@ auto part2(const std::vector<Game> &input) {
 } // namespace
 
 auto main() -> int {
+  BOOST_LOG_TRIVIAL(debug) << "Starting up";
   auto input = parse("input/02.txt");
-  std::cout << "Part 1: " << part1(input) << std::endl; // 2632
-  std::cout << "Part 2: " << part2(input) << std::endl; // 69629
+  BOOST_LOG_TRIVIAL(debug) << "Input parsed";
+  BOOST_LOG_TRIVIAL(info) << "Part 1: " << part1(input); // 2632
+  BOOST_LOG_TRIVIAL(info) << "Part 2: " << part2(input); // 69629
 }

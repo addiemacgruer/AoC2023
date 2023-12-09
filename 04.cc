@@ -1,6 +1,6 @@
 #include <algorithm>
+#include <boost/log/trivial.hpp>
 #include <fstream>
-#include <iostream>
 #include <numeric>
 #include <sstream>
 #include <stdexcept>
@@ -74,7 +74,9 @@ auto part2(const ScratchCards &input) {
 } // namespace
 
 auto main() -> int {
+  BOOST_LOG_TRIVIAL(debug) << "Starting up";
   auto input = parse("input/04.txt");
-  std::cout << "Part 1: " << part1(input) << '\n'; // 27845
-  std::cout << "Part 2: " << part2(input) << '\n'; // 9496801
+  BOOST_LOG_TRIVIAL(debug) << "Input parsed";
+  BOOST_LOG_TRIVIAL(info) << "Part 1: " << part1(input); // 27845
+  BOOST_LOG_TRIVIAL(info) << "Part 2: " << part2(input); // 9496801
 }

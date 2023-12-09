@@ -1,5 +1,5 @@
+#include <boost/log/trivial.hpp>
 #include <fstream>
-#include <iostream>
 #include <map>
 #include <set>
 #include <stdexcept>
@@ -67,7 +67,9 @@ auto part(const std::vector<std::string> &input, F evaluator) {
 } // namespace
 
 auto main() -> int {
+  BOOST_LOG_TRIVIAL(debug) << "Starting up";
   auto input = parse("input/01.txt");
-  std::cout << "Part1: " << part(input, is_digit) << std::endl;         // 55816
-  std::cout << "Part2: " << part(input, is_digit_or_name) << std::endl; // 54980
+  BOOST_LOG_TRIVIAL(debug) << "Input parsed";
+  BOOST_LOG_TRIVIAL(info) << "Part1: " << part(input, is_digit);         // 55816
+  BOOST_LOG_TRIVIAL(info) << "Part2: " << part(input, is_digit_or_name); // 54980
 }

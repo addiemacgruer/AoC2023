@@ -1,6 +1,6 @@
 #include <algorithm>
+#include <boost/log/trivial.hpp>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -108,7 +108,9 @@ auto rank_and_score(Hands hands, bool jokers) {
 } // namespace
 
 auto main() -> int {
+  BOOST_LOG_TRIVIAL(debug) << "Starting up";
   auto input = parse("input/07.txt");
-  std::cout << "Part 1: " << rank_and_score(input, false) << '\n';           // 248559379
-  std::cout << "Part 2: " << rank_and_score(std::move(input), true) << '\n'; // 249631254
+  BOOST_LOG_TRIVIAL(debug) << "Input parsed";
+  BOOST_LOG_TRIVIAL(info) << "Part 1: " << rank_and_score(input, false); // 248559379
+  BOOST_LOG_TRIVIAL(info) << "Part 2: " << rank_and_score(input, true);  // 249631254
 }

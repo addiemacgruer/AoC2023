@@ -1,6 +1,6 @@
 #include <algorithm>
+#include <boost/log/trivial.hpp>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -18,7 +18,7 @@ auto parse(const std::string &filename) {
   auto line = std::string{};
   while (std::getline(input_handle, line)) {
     auto ss = std::stringstream{line};
-    rval.push_back({});
+    rval.emplace_back();
     auto i = int{};
     while (ss >> i)
       rval.back().push_back(i);
@@ -34,7 +34,7 @@ auto solve(const Oasis &sequences) {
     ss.push_back(sequence);
 
     do {
-      ss.push_back({});
+      ss.emplace_back();
       auto &last = ss.at(ss.size() - 2);
       for (auto i = size_t{}; i < last.size() - 1; ++i)
         ss.back().push_back(last.at(i + 1) - last.at(i));
@@ -50,12 +50,15 @@ auto solve(const Oasis &sequences) {
     part1 += ss.front().back();
     part2 += ss.front().front();
   }
-  std::cout << "Part 1: " << part1 << std::endl; // 1819125966
-  std::cout << "Part 2: " << part2 << std::endl; // 1140
+  BOOST_LOG_TRIVIAL(info) << "Part 1: " << part1   // 1819125966
+                          << " Part 2: " << part2; // 1140
 }
 
 } // namespace
 
 auto main() -> int {
-  solve(parse("input/09.txt"));
+  BOOST_LOG_TRIVIAL(debug) << "Starting up";
+  auto input = parse("input/09.txt");
+  BOOST_LOG_TRIVIAL(debug) << "Input parsed";
+  solve(input);
 }
