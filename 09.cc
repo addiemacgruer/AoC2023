@@ -1,41 +1,61 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 namespace {
 
-using Parse = std::vector<std::string>;
+using Oasis = std::vector<std::vector<int>>;
 
 auto parse(const std::string &filename) {
-  auto rval = Parse{};
+  auto rval = Oasis{};
   auto input_handle = std::ifstream{filename};
   if (!input_handle)
     throw std::runtime_error{"could not open file"};
   auto line = std::string{};
   while (std::getline(input_handle, line)) {
-    rval.push_back(line);
+    auto ss = std::stringstream{line};
+    rval.push_back({});
+    auto i = int{};
+    while (ss >> i)
+      rval.back().push_back(i);
   }
   return rval;
 }
 
-auto part1(const Parse &input) {
-  auto rval = 0;
-  return rval;
-}
+auto solve(const Oasis &sequences) {
+  auto part1 = 0;
+  auto part2 = 0;
+  for (const auto &sequence : sequences) {
+    auto ss = std::vector<std::vector<int>>{};
+    ss.push_back(sequence);
 
-auto part2(const Parse &input) {
-  auto rval = 0;
-  return rval;
+    do {
+      ss.push_back({});
+      auto &last = ss.at(ss.size() - 2);
+      for (auto i = size_t{}; i < last.size() - 1; ++i)
+        ss.back().push_back(last.at(i + 1) - last.at(i));
+    } while (!std::all_of(ss.back().begin(), ss.back().end(), [](auto a) {
+      return a == 0;
+    }));
+
+    for (auto i = int(ss.size()) - 2; i >= 0; --i) {
+      ss.at(i).push_back(ss.at(i).back() + ss.at(i + 1).back());
+      ss.at(i).insert(ss.at(i).begin(), ss.at(i).front() - ss.at(i + 1).front());
+    }
+
+    part1 += ss.front().back();
+    part2 += ss.front().front();
+  }
+  std::cout << "Part 1: " << part1 << std::endl; // 1819125966
+  std::cout << "Part 2: " << part2 << std::endl; // 1140
 }
 
 } // namespace
 
 auto main() -> int {
-  auto input = parse("00.tst");
-  std::cout << "Part 1: " << part1(input) << '\n';
-  std::cout << "Part 2: " << part2(input) << '\n';
+  solve(parse("09.txt"));
 }
