@@ -2,6 +2,7 @@
 #include <fstream>
 #include <future>
 #include <limits>
+#include <numeric>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -17,13 +18,7 @@ struct Mapping {
 
 struct Input {
   std::vector<size_t> seeds{};
-  std::vector<Mapping> seed2soil{};
-  std::vector<Mapping> soil2fert{};
-  std::vector<Mapping> fert2water{};
-  std::vector<Mapping> water2light{};
-  std::vector<Mapping> light2temp{};
-  std::vector<Mapping> temp2humi{};
-  std::vector<Mapping> humi2loc{};
+  std::vector<std::vector<Mapping>> mappings{};
 };
 
 auto parse_mappings(std::vector<Mapping> &map, std::istream &input) {
@@ -56,14 +51,10 @@ auto parse(const std::string &filename) {
   while (ss >> v && v)
     rval.seeds.push_back(v);
   std::getline(input_handle, line);
-  parse_mappings(rval.seed2soil, input_handle);
-  parse_mappings(rval.soil2fert, input_handle);
-  parse_mappings(rval.fert2water, input_handle);
-  parse_mappings(rval.water2light, input_handle);
-  parse_mappings(rval.light2temp, input_handle);
-  parse_mappings(rval.temp2humi, input_handle);
-  parse_mappings(rval.humi2loc, input_handle);
-
+  while (input_handle) {
+    rval.mappings.emplace_back();
+    parse_mappings(rval.mappings.back(), input_handle);
+  }
   return rval;
 }
 
@@ -75,13 +66,10 @@ auto find_next(size_t input, const std::vector<Mapping> &maps) {
 }
 
 auto seed2loc(size_t seed, const Input &input) {
-  auto soil = find_next(seed, input.seed2soil);
-  auto fert = find_next(soil, input.soil2fert);
-  auto water = find_next(fert, input.fert2water);
-  auto light = find_next(water, input.water2light);
-  auto temp = find_next(light, input.light2temp);
-  auto humi = find_next(temp, input.temp2humi);
-  return find_next(humi, input.humi2loc);
+  return std::accumulate(input.mappings.begin(), input.mappings.end(), seed,
+                         [](size_t in, const std::vector<Mapping> &mapping) {
+                           return find_next(in, mapping);
+                         });
 }
 
 auto part1(const Input &input) {
