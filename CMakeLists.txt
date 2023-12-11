@@ -7,15 +7,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
-if (CMAKE_GENERATOR MATCHES "Ninja")
-	file(
-		WRITE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake" 
-			"STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_C \"\${CMAKE_DEPFILE_FLAGS_C}\")\n"
-			"STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_CXX \"\${CMAKE_DEPFILE_FLAGS_CXX}\")\n"
-	)
-	set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake" CACHE INTERNAL "")
-endif()
-
 project(Advent2023 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS ON)
@@ -62,7 +53,7 @@ else()
 	add_definitions(-DNDEBUG)
 endif()
 
-foreach (day IN ITEMS 00 01 02 03 04 05 06 07 08 09 10)
+foreach (day IN ITEMS 00 01 02 03 04 05 06 07 08 09 10 11)
 	add_executable(${day} ${day}.cc)
 	target_link_libraries(${day} PRIVATE Boost::log)
 endforeach()
