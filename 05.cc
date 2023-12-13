@@ -15,6 +15,9 @@ struct Mapping {
   size_t source;
   size_t range;
 };
+auto operator<(const Mapping &a, const Mapping &b) {
+  return a.source < b.source;
+}
 
 struct Input {
   std::vector<size_t> seeds{};
@@ -79,22 +82,60 @@ auto part1(const Input &input) {
   return rval;
 }
 
+struct Range {
+  size_t low;
+  size_t high;
+};
+auto operator<(const Range &a, const Range &b) {
+  return a.low < b.low;
+}
+
 auto part2(const Input &input) {
-  auto futures = std::vector<std::future<size_t>>{};
+  auto ranges = std::vector<Range>{};
   for (auto i = size_t{}; i < input.seeds.size(); i += 2) {
     auto lower = input.seeds.at(i);
     auto upper = lower + input.seeds.at(i + 1);
-    futures.push_back(std::async([&input, lower, upper]() {
-      auto loc_rval = std::numeric_limits<size_t>::max();
-      for (auto seed = lower; seed < upper; ++seed)
-        loc_rval = std::min(seed2loc(seed, input), loc_rval);
-      return loc_rval;
-    }));
+    ranges.push_back({lower, upper});
   }
-  auto rval = std::numeric_limits<size_t>::max();
-  for (auto &future : futures)
-    rval = std::min(rval, future.get());
-  return rval;
+  for (auto mapping : input.mappings) {
+    std::sort(ranges.begin(), ranges.end());
+    std::sort(mapping.begin(), mapping.end());
+    auto partials = std::vector<Range>{};
+    std::swap(partials, ranges);
+    while (!partials.empty()) {
+      auto sut = partials.back();
+      partials.pop_back();
+      for (auto &section : mapping) {
+        if (sut.low > section.source + section.range)
+          continue;
+        if (sut.high < section.source) {
+          ranges.push_back(sut);
+          goto next_partial;
+        }
+        if (sut.low < section.source && sut.high > section.source) {
+          ranges.push_back({sut.low, section.source - 1});
+          partials.push_back({section.source, sut.high});
+          goto next_partial;
+        }
+        if (sut.low >= section.source && sut.high < section.source + section.range) {
+          ranges.push_back({section.dest - section.source + sut.low,
+                            section.dest - section.source + sut.high});
+          goto next_partial;
+        }
+        if (sut.low >= section.source && sut.high > section.source + section.range) {
+          ranges.push_back(
+              {section.dest - section.source + sut.low, section.dest + section.range});
+          partials.push_back({section.source + section.range + 1, sut.high});
+          goto next_partial;
+        }
+      }
+      ranges.push_back(sut);
+    next_partial:
+      continue;
+    }
+  }
+  std::sort(ranges.begin(), ranges.end());
+  return ranges.front().low - 1;
 }
 
 } // namespace
