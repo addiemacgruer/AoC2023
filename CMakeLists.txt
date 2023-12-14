@@ -53,7 +53,7 @@ else()
 	add_definitions(-DNDEBUG)
 endif()
 
-foreach (day IN ITEMS 00 01 02 03 04 05 06 07 08 09 10 11 12 13)
+foreach (day IN ITEMS 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14)
 	add_executable(${day} ${day}.cc)
 	target_link_libraries(${day} PRIVATE Boost::log)
 endforeach()
