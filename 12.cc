@@ -29,16 +29,11 @@ auto parse(const std::string &filename) {
     auto numbers = std::string{};
     auto ss = std::stringstream{line};
     ss >> rval.back().pattern >> numbers;
-    auto start = size_t{};
-    while (true) {
-      auto comma = numbers.find(',', start);
-      if (comma != std::string::npos) {
-        rval.back().lengths.push_back(std::stoi(numbers.substr(start, comma - start)));
-        start = comma + 1;
-      } else {
-        rval.back().lengths.push_back(std::stoi(numbers.substr(start)));
-        break;
-      }
+    auto sss = std::stringstream(numbers);
+    auto num = std::string{};
+    while (sss.good()) {
+      std::getline(sss, num, ',');
+      rval.back().lengths.push_back(std::stoi(num));
     }
   }
   return rval;
