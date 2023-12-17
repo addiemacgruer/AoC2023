@@ -1,34 +1,26 @@
 #include "point.h"
 #include <boost/log/trivial.hpp>
 #include <fstream>
-#include <limits>
 #include <queue>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 namespace {
 
-auto up = Point{0, -1};
-auto down = Point{0, 1};
-auto left = Point{-1, 0};
-auto right = Point{1, 0};
-
-auto dirs = std::vector<Point>{right, down, left, up};
+auto dirs = std::vector<Point>{P::right, P::down, P::left, P::up};
 
 using Map = std::unordered_map<Point, int>;
 
-struct Parse {
+struct Factory {
   Map map{};
   int width;
   int height;
 };
 
 auto parse(const std::string &filename) {
-  auto rval = Parse{};
+  auto rval = Factory{};
   auto input_handle = std::ifstream{filename};
   if (!input_handle)
     throw std::runtime_error{"could not open file"};
@@ -54,45 +46,45 @@ auto operator<(const Walk &a, const Walk &b) {
   return a.heat >= b.heat;
 }
 
-auto try_next(const Parse &input, int shortest, int longest) {
-  auto queue = std::priority_queue<Walk>{};
-  auto been = std::unordered_map<Point, int>{};
-  queue.emplace(0, Point{0, 0}, -1);
-  while (!queue.empty()) {
-    auto walk = queue.top();
-    queue.pop();
+auto dijkstra(const Factory &factory, int mini, int maxi) {
+  auto unvisited = std::priority_queue<Walk>{};
+  auto visited = std::unordered_map<Point, int>{};
+  unvisited.emplace(0, Point{0, 0}, -1);
+  while (!unvisited.empty()) {
+    auto walk = unvisited.top();
+    unvisited.pop();
 
-    if (walk.pos.x == input.width - 1 && walk.pos.y == input.height - 1)
+    if (walk.pos.x == factory.width - 1 && walk.pos.y == factory.height - 1)
       return walk.heat;
-    if (been[walk.pos] & (1 << walk.dir))
+    if (visited[walk.pos] & (1 << walk.dir))
       continue;
-    been[walk.pos] |= (1 << walk.dir);
+    visited[walk.pos] |= (1 << walk.dir);
 
     for (auto d = 0; d < int(dirs.size()); ++d) {
       if (d != -1 && (d == walk.dir || (d + 2) % 4 == walk.dir))
         continue;
       auto prospective = walk.pos;
       auto p_heat = walk.heat;
-      for (auto step = 1; step <= longest; ++step) {
+      for (auto step = 1; step <= maxi; ++step) {
         prospective = prospective + dirs.at(d);
-        if (prospective.x < 0 || prospective.y < 0 || prospective.x >= input.width ||
-            prospective.y >= input.height)
+        if (prospective.x < 0 || prospective.y < 0 || prospective.x >= factory.width ||
+            prospective.y >= factory.height)
           break;
-        p_heat += input.map.at(prospective);
-        if (step >= shortest)
-          queue.emplace(p_heat, prospective, d);
+        p_heat += factory.map.at(prospective);
+        if (step >= mini)
+          unvisited.emplace(p_heat, prospective, d);
       }
     }
   }
   throw std::runtime_error{"lost"};
 }
 
-auto part1(const Parse &input) {
-  return try_next(input, 1, 3);
+auto part1(const Factory &factory) {
+  return dijkstra(factory, 1, 3);
 }
 
-auto part2(const Parse &input) {
-  return try_next(input, 4, 10);
+auto part2(const Factory &factory) {
+  return dijkstra(factory, 4, 10);
 }
 
 } // namespace

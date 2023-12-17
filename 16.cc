@@ -12,11 +12,6 @@
 
 namespace {
 
-auto up = Point{0, -1};
-auto down = Point{0, 1};
-auto left = Point{-1, 0};
-auto right = Point{1, 0};
-
 enum Dir { UP = 1, DOWN = 2, LEFT = 4, RIGHT = 8 };
 
 using Parse = std::vector<std::string>;
@@ -48,22 +43,22 @@ auto energise(const Parse &input, const Beam &origin) {
     auto beam = beams.back();
     beams.pop_back();
 
-    if (beam.dir == left && beam.pos.x < width) {
+    if (beam.dir == P::left && beam.pos.x < width) {
       if (contraption.contains(beam.pos) && contraption.at(beam.pos) & Dir::LEFT)
         continue;
       contraption[beam.pos] |= Dir::LEFT;
     }
-    if (beam.dir == right && beam.pos.x >= 0) {
+    if (beam.dir == P::right && beam.pos.x >= 0) {
       if (contraption.contains(beam.pos) && contraption.at(beam.pos) & Dir::RIGHT)
         continue;
       contraption[beam.pos] |= Dir::RIGHT;
     }
-    if (beam.dir == up && beam.pos.y < height) {
+    if (beam.dir == P::up && beam.pos.y < height) {
       if (contraption.contains(beam.pos) && contraption.at(beam.pos) & Dir::UP)
         continue;
       contraption[beam.pos] |= Dir::UP;
     }
-    if (beam.dir == down && beam.pos.y >= 0) {
+    if (beam.dir == P::down && beam.pos.y >= 0) {
       if (contraption.contains(beam.pos) && contraption.at(beam.pos) & Dir::DOWN)
         continue;
       contraption[beam.pos] |= Dir::DOWN;
@@ -80,45 +75,45 @@ auto energise(const Parse &input, const Beam &origin) {
     }
 
     if (input.at(next.y).at(next.x) == '/') {
-      if (beam.dir == right)
-        beams.push_back({next, up});
-      else if (beam.dir == left)
-        beams.push_back({next, down});
-      else if (beam.dir == up)
-        beams.push_back({next, right});
-      else if (beam.dir == down)
-        beams.push_back({next, left});
+      if (beam.dir == P::right)
+        beams.push_back({next, P::up});
+      else if (beam.dir == P::left)
+        beams.push_back({next, P::down});
+      else if (beam.dir == P::up)
+        beams.push_back({next, P::right});
+      else if (beam.dir == P::down)
+        beams.push_back({next, P::left});
       continue;
     }
 
     if (input.at(next.y).at(next.x) == '\\') {
-      if (beam.dir == right)
-        beams.push_back({next, down});
-      else if (beam.dir == left)
-        beams.push_back({next, up});
-      else if (beam.dir == up)
-        beams.push_back({next, left});
-      else if (beam.dir == down)
-        beams.push_back({next, right});
+      if (beam.dir == P::right)
+        beams.push_back({next, P::down});
+      else if (beam.dir == P::left)
+        beams.push_back({next, P::up});
+      else if (beam.dir == P::up)
+        beams.push_back({next, P::left});
+      else if (beam.dir == P::down)
+        beams.push_back({next, P::right});
       continue;
     }
 
     if (input.at(next.y).at(next.x) == '-') {
-      if (beam.dir == right || beam.dir == left)
+      if (beam.dir == P::right || beam.dir == P::left)
         beams.push_back({next, beam.dir});
       else {
-        beams.push_back({next, left});
-        beams.push_back({next, right});
+        beams.push_back({next, P::left});
+        beams.push_back({next, P::right});
       }
       continue;
     }
 
     if (input.at(next.y).at(next.x) == '|') {
-      if (beam.dir == up || beam.dir == down)
+      if (beam.dir == P::up || beam.dir == P::down)
         beams.push_back({next, beam.dir});
       else {
-        beams.push_back({next, up});
-        beams.push_back({next, down});
+        beams.push_back({next, P::up});
+        beams.push_back({next, P::down});
       }
       continue;
     }
@@ -129,7 +124,7 @@ auto energise(const Parse &input, const Beam &origin) {
 }
 
 auto part1(const Parse &input) {
-  return energise(input, {{-1, 0}, right});
+  return energise(input, {{-1, 0}, P::right});
 }
 
 auto part2(const Parse &input) {
@@ -137,25 +132,25 @@ auto part2(const Parse &input) {
   futures.push_back(std::async([&]() {
     auto rval = size_t{};
     for (auto x = 0; x < int(input.at(0).size()); ++x)
-      rval = std::max(rval, energise(input, {{x, int(input.size())}, up}));
+      rval = std::max(rval, energise(input, {{x, int(input.size())}, P::up}));
     return rval;
   }));
   futures.push_back(std::async([&]() {
     auto rval = size_t{};
     for (auto x = 0; x < int(input.at(0).size()); ++x)
-      rval = std::max(rval, energise(input, {{x, -1}, down}));
+      rval = std::max(rval, energise(input, {{x, -1}, P::down}));
     return rval;
   }));
   futures.push_back(std::async([&]() {
     auto rval = size_t{};
     for (auto y = 0; y < int(input.size()); ++y)
-      rval = std::max(rval, energise(input, {{int(input.at(0).size())}, left}));
+      rval = std::max(rval, energise(input, {{int(input.at(0).size())}, P::left}));
     return rval;
   }));
   futures.push_back(std::async([&]() {
     auto rval = size_t{};
     for (auto y = 0; y < int(input.size()); ++y)
-      rval = std::max(rval, energise(input, {{-1, y}, right}));
+      rval = std::max(rval, energise(input, {{-1, y}, P::right}));
     return rval;
   }));
   return std::accumulate(futures.begin(), futures.end(), size_t{}, [](auto a, auto &f) {

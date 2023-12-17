@@ -10,14 +10,9 @@
 
 namespace {
 
-auto left = Point{-1, 0};
-auto right = Point{1, 0};
-auto up = Point{0, -1};
-auto down = Point{0, 1};
-
 auto pipes = std::unordered_map<char, std::vector<Point>>{
-    {'|', {up, down}}, {'-', {left, right}}, {'L', {up, right}},
-    {'J', {left, up}}, {'7', {left, down}},  {'F', {right, down}},
+    {'|', {P::up, P::down}}, {'-', {P::left, P::right}}, {'L', {P::up, P::right}},
+    {'J', {P::left, P::up}}, {'7', {P::left, P::down}},  {'F', {P::right, P::down}},
 };
 
 struct Maze {
@@ -33,7 +28,7 @@ auto goes(const std::vector<Point> &points, const Point &direction) {
 
 auto find_start(const Maze &input) {
   auto start = std::vector<Point>{};
-  for (auto &adjacent : std::vector{up, down, left, right}) {
+  for (auto &adjacent : std::vector{P::up, P::down, P::left, P::right}) {
     auto test = input.start + adjacent;
     if (!input.pieces.contains(test))
       continue;

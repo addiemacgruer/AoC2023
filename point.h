@@ -36,6 +36,15 @@ inline auto manhattan(const Point &a, const Point &b) {
   return std::abs(a.x - b.x) + std::abs(a.y - b.y);
 }
 
+namespace P {
+
+static auto up = Point{0, -1};
+static auto down = Point{0, 1};
+static auto left = Point{-1, 0};
+static auto right = Point{1, 0};
+
+} // namespace P
+
 template <>
 struct std::hash<Point> {
   std::size_t operator()(const Point &p) const noexcept {
