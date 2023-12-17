@@ -1,4 +1,4 @@
-#include "point.h"
+#include "parsing.h"
 #include <bitset>
 #include <boost/log/trivial.hpp>
 #include <fstream>
@@ -14,27 +14,14 @@ auto dirs = std::vector<Point>{P::right, P::down, P::left, P::up};
 
 using Map = std::unordered_map<Point, int>;
 
-struct Factory {
-  Map map{};
-  int width;
-  int height;
-};
+using Factory = NumericMap<int>;
 
 auto parse(const std::string &filename) {
   auto rval = Factory{};
   auto input_handle = std::ifstream{filename};
   if (!input_handle)
     throw std::runtime_error{"could not open file"};
-  auto line = std::string{};
-  auto y = 0;
-  while (std::getline(input_handle, line)) {
-    rval.width = std::max(rval.width, int(line.size()));
-    for (auto x = 0; x < rval.width; ++x)
-      rval.map.insert({Point{x, y}, line.at(x) - '0'});
-    ++y;
-  }
-  rval.height = y;
-  return rval;
+  return parse_map(input_handle, char_to_num);
 }
 
 struct Node {

@@ -1,3 +1,4 @@
+#include "parsing.h"
 #include "point.h"
 #include <boost/log/trivial.hpp>
 #include <fstream>
@@ -12,14 +13,10 @@ namespace {
 using Parse = std::vector<std::string>;
 
 auto parse(const std::string &filename) {
-  auto rval = Parse{};
   auto input_handle = std::ifstream{filename};
   if (!input_handle)
     throw std::runtime_error{"could not open file"};
-  auto line = std::string{};
-  while (std::getline(input_handle, line))
-    rval.push_back(line);
-  return rval;
+  return parse_strings(input_handle);
 }
 
 struct PartPosition {

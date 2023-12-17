@@ -1,3 +1,4 @@
+#include "parsing.h"
 #include <boost/log/trivial.hpp>
 #include <fstream>
 #include <sstream>
@@ -23,12 +24,11 @@ auto parse(const std::string &filename) {
   auto input_handle = std::ifstream{filename};
   if (!input_handle)
     throw std::runtime_error{"could not open file"};
-  auto line = std::string{};
   auto number = int{};
   auto word = std::string{};
-  while (std::getline(input_handle, line)) {
+  auto ss = std::stringstream{};
+  while (getline(input_handle, ss)) {
     auto game = Game{};
-    auto ss = std::stringstream{line};
     ss >> word; // game
     ss >> game.id;
     ss >> word; // :

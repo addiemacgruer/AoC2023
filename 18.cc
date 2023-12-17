@@ -25,12 +25,12 @@ auto parse(const std::string &filename) {
   return rval;
 }
 
-auto part1(const Parse &input) {
+auto part1([[maybe_unused]] const Parse &input) {
   auto rval = 0;
   return rval;
 }
 
-auto part2(const Parse &input) {
+auto part2([[maybe_unused]] const Parse &input) {
   auto rval = 0;
   return rval;
 }
@@ -39,7 +39,7 @@ auto part2(const Parse &input) {
 
 auto main() -> int {
   BOOST_LOG_TRIVIAL(debug) << "Starting up";
-  auto input = parse("input/00.tst");
+  auto input = parse("input/18.tst");
   BOOST_LOG_TRIVIAL(debug) << "Input parsed";
   BOOST_LOG_TRIVIAL(info) << "Part 1: " << part1(input);
   BOOST_LOG_TRIVIAL(info) << "Part 2: " << part2(input);

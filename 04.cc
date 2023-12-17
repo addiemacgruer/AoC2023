@@ -1,3 +1,4 @@
+#include "parsing.h"
 #include <algorithm>
 #include <boost/log/trivial.hpp>
 #include <fstream>
@@ -27,9 +28,9 @@ auto parse(const std::string &filename) {
   auto line = std::string{};
   auto s = std::string{};
   auto i = int{};
-  while (std::getline(input_handle, line)) {
+  auto ss = std::stringstream{};
+  while (getline(input_handle, ss)) {
     auto card = ScratchCard{};
-    auto ss = std::stringstream{std::move(line)};
     ss >> s >> card.game >> s;
     while (ss >> s) {
       if (s == "|")
