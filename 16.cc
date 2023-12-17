@@ -1,6 +1,8 @@
 #include "point.h"
 #include <boost/log/trivial.hpp>
 #include <fstream>
+#include <future>
+#include <numeric>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -131,16 +133,34 @@ auto part1(const Parse &input) {
 }
 
 auto part2(const Parse &input) {
-  auto rval = size_t{};
-  for (auto x = 0; x < int(input.at(0).size()); ++x) {
-    rval = std::max(rval, energise(input, {{x, int(input.size())}, up}));
-    rval = std::max(rval, energise(input, {{x, -1}, down}));
-  }
-  for (auto y = 0; y < int(input.size()); ++y) {
-    rval = std::max(rval, energise(input, {{int(input.at(0).size())}, left}));
-    rval = std::max(rval, energise(input, {{-1, y}, right}));
-  }
-  return rval;
+  auto futures = std::vector<std::future<size_t>>{};
+  futures.push_back(std::async([&]() {
+    auto rval = size_t{};
+    for (auto x = 0; x < int(input.at(0).size()); ++x)
+      rval = std::max(rval, energise(input, {{x, int(input.size())}, up}));
+    return rval;
+  }));
+  futures.push_back(std::async([&]() {
+    auto rval = size_t{};
+    for (auto x = 0; x < int(input.at(0).size()); ++x)
+      rval = std::max(rval, energise(input, {{x, -1}, down}));
+    return rval;
+  }));
+  futures.push_back(std::async([&]() {
+    auto rval = size_t{};
+    for (auto y = 0; y < int(input.size()); ++y)
+      rval = std::max(rval, energise(input, {{int(input.at(0).size())}, left}));
+    return rval;
+  }));
+  futures.push_back(std::async([&]() {
+    auto rval = size_t{};
+    for (auto y = 0; y < int(input.size()); ++y)
+      rval = std::max(rval, energise(input, {{-1, y}, right}));
+    return rval;
+  }));
+  return std::accumulate(futures.begin(), futures.end(), size_t{}, [](auto a, auto &f) {
+    return std::max(a, f.get());
+  });
 }
 
 } // namespace
