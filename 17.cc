@@ -1,4 +1,5 @@
 #include "point.h"
+#include <bitset>
 #include <boost/log/trivial.hpp>
 #include <fstream>
 #include <queue>
@@ -36,35 +37,37 @@ auto parse(const std::string &filename) {
   return rval;
 }
 
-struct Walk {
+struct Node {
   int heat;
   Point pos;
   int dir;
 };
 
-auto operator<(const Walk &a, const Walk &b) {
+auto operator<[[maybe_unused]] (const Node &a, const Node &b) {
   return a.heat >= b.heat;
 }
 
 auto dijkstra(const Factory &factory, int mini, int maxi) {
-  auto unvisited = std::priority_queue<Walk>{};
-  auto visited = std::unordered_map<Point, int>{};
+  auto unvisited = std::priority_queue<Node>{};
+  auto visited = std::unordered_map<Point, std::bitset<4>>{};
   unvisited.emplace(0, Point{0, 0}, -1);
   while (!unvisited.empty()) {
-    auto walk = unvisited.top();
+    auto node = unvisited.top();
     unvisited.pop();
 
-    if (walk.pos.x == factory.width - 1 && walk.pos.y == factory.height - 1)
-      return walk.heat;
-    if (visited[walk.pos] & (1 << walk.dir))
-      continue;
-    visited[walk.pos] |= (1 << walk.dir);
+    if (node.pos.x == factory.width - 1 && node.pos.y == factory.height - 1)
+      return node.heat;
+    if (node.dir != -1) {
+      if (visited[node.pos].test(node.dir))
+        continue;
+      visited[node.pos].set(node.dir);
+    }
 
     for (auto d = 0; d < int(dirs.size()); ++d) {
-      if (d != -1 && (d == walk.dir || (d + 2) % 4 == walk.dir))
+      if (d != -1 && (d == node.dir || (d + 2) % 4 == node.dir))
         continue;
-      auto prospective = walk.pos;
-      auto p_heat = walk.heat;
+      auto prospective = node.pos;
+      auto p_heat = node.heat;
       for (auto step = 1; step <= maxi; ++step) {
         prospective = prospective + dirs.at(d);
         if (prospective.x < 0 || prospective.y < 0 || prospective.x >= factory.width ||
