@@ -6,6 +6,12 @@
 struct Point {
   int x;
   int y;
+
+  auto operator+=(const Point &other) {
+    x += other.x;
+    y += other.y;
+    return *this;
+  }
 };
 
 inline auto operator<(const Point &a, const Point &b) {
@@ -20,8 +26,8 @@ inline auto operator!=(const Point &a, const Point &b) {
   return a.x != b.x || a.y != b.y;
 }
 
-inline auto operator+(const Point &a, const Point &b) {
-  return Point{a.x + b.x, a.y + b.y};
+inline auto operator+(Point a, const Point &b) {
+  return a += b;
 }
 
 inline auto operator-(const Point &a, const Point &b) {
