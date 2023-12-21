@@ -1,10 +1,13 @@
 #include "parsing.h"
 #include <algorithm>
+#include <bits/ranges_algo.h>
 #include <boost/log/trivial.hpp>
 #include <fstream>
+#include <functional>
 #include <list>
 #include <memory>
 #include <numeric>
+#include <ranges>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -42,9 +45,7 @@ struct FlipFlop : public Module {
 struct Conjunction : public Module {
   auto receive(bool pulse, const std::string &source) -> SendList override {
     inputs[source] = pulse;
-    auto memory = std::all_of(inputs.begin(), inputs.end(), [](auto &i) {
-      return i.second;
-    });
+    auto memory = std::ranges::all_of(inputs | std::views::values, std::identity());
     return {!memory, &outputs};
   }
 };
